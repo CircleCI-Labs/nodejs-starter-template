@@ -1,0 +1,91 @@
+# .circleci/team-config.yml
+# Team-specific CircleCI job/workflow overrides. The main config.yml is managed by the platform team.
+version: 2.1
+
+orbs:
+  docker: circleci/docker@2.8.2
+  node: circleci/node@6.1.0
+
+commands:
+  save_docker_image:
+    description: "Save a Docker image to a tarball."
+    parameters:
+      image_name:
+        type: string
+      tar_path:
+        type: string
+    steps:
+      - run:
+          name: Save Docker image
+          command: |
+            docker save -o <<parameters.tar_path>> <<parameters.image_name>>
+      - persist_to_workspace:
+          root: .
+          paths:
+            - <<parameters.tar_path>>
+
+  load_docker_image:
+    description: "Load a Docker image from a tarball."
+    parameters:
+      tar_path:
+        type: string
+    steps:
+      - run:
+          name: Load Docker image
+          command: |
+            docker load -i <<parameters.tar_path>>
+
+jobs:
+  build:
+    machine:
+      image: ubuntu-2204:current
+      docker_layer_caching: true
+    steps:
+      - checkout
+      - docker/install-docker
+      - docker/check
+      - docker/build:
+          image: starter-template
+          tag: latest
+          extra_build_args: "--progress=plain"
+          cache_from: starter-template:latest
+      - save_docker_image:
+          image_name: starter-template:latest
+          tar_path: starter-template.tar
+      - store_artifacts:
+          path: starter-template.tar
+          destination: docker-image
+
+  test:
+    docker:
+      - image: cimg/node:20.11
+    steps:
+      - checkout
+      - node/install-packages:
+          pkg-manager: npm
+      - restore_cache:
+          keys:
+            - v1-nodedeps-{{ checksum "package-lock.json" }}
+      - run:
+          name: Install dependencies
+          command: |
+            npm ci
+      - save_cache:
+          key: v1-nodedeps-{{ checksum "package-lock.json" }}
+          paths:
+            - ~/.npm
+            - node_modules
+      - run:
+          name: Run linting
+          command: |
+            npm run lint
+      - run:
+          name: Run tests with JUnit output
+          command: |
+            mkdir -p test-results
+            npm test
+      - store_test_results:
+          path: test-results
+      - store_artifacts:
+          path: test-results
+          destination: test-results 

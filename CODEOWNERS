@@ -1,0 +1,5 @@
+# Global owners
+* @your-team @platform-team
+
+# CI/CD configuration
+.circleci/ @platform-team 

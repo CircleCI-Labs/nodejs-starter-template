@@ -1,0 +1,56 @@
+{
+  "name": "starter-template",
+  "version": "0.1.0",
+  "description": "A starter template for Node.js projects.",
+  "main": "src/starter-template/index.js",
+  "bin": {
+    "starter-template": "src/starter-template/main.js"
+  },
+  "scripts": {
+    "start": "node src/starter-template/main.js",
+    "hello": "node src/starter-template/main.js hello",
+    "build": "node src/starter-template/main.js build",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "lint": "eslint src/ tests/",
+    "lint:fix": "eslint src/ tests/ --fix",
+    "format": "prettier --write src/ tests/ *.js *.json *.md",
+    "format:check": "prettier --check src/ tests/ *.js *.json *.md",
+    "precommit": "lint-staged",
+    "prepare": "husky install"
+  },
+  "keywords": [
+    "starter",
+    "template",
+    "nodejs",
+    "cli"
+  ],
+  "author": "Your Name <your.email@example.com>",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "dependencies": {
+    "commander": "^12.0.0",
+    "chalk": "^4.1.2"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.0",
+    "prettier": "^3.2.5",
+    "jest": "^29.7.0",
+    "jest-junit": "^16.0.0",
+    "husky": "^9.0.11",
+    "lint-staged": "^15.2.2",
+    "@eslint/js": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0"
+  },
+  "lint-staged": {
+    "*.{js,json,md}": [
+      "prettier --write"
+    ],
+    "*.js": [
+      "eslint --fix"
+    ]
+  }
+}
