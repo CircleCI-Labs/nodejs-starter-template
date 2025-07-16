@@ -19,7 +19,7 @@ Thank you for considering contributing to this project!
 - Ensure all tests pass (`npm test`).
 - Ensure linting passes (`npm run lint`).
 - Add/Update tests for new features or bugfixes.
-- Keep PRs focused and well-described.
+- Keep PRs focused and clearly described.
 
 ## Tests
 
@@ -51,4 +51,4 @@ npm run format
 
 ## Questions
 
-Open an issue or discussion for help or suggestions.
+Please open an issue or start a discussion if you need help or have suggestions.
